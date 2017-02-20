@@ -1,115 +1,38 @@
-#ES6 Module Bundler Setup
+# Backbone Router Warmup
+### Setup
+1. Inside `~/TIY/warmups`, clone this repository 
 
-##Setup 
+2. Install the project's packages `npm install`
 
-##### 1. Clone this repo
+3. In one terminal tab: 
+  - `npm run go` to compile es6 --> es5
+  - `npm start` for the webserver
+
+### Task
+Use Backbone Router to create routes for:
+
+- `state/:st` : legislators by state
+- `gender/:gendr`  :legislators by gender
+- `party/:prty/gender/:gen` : legislators by party + gender
+- `congressperson/:id` : legislators by id
+- `''` (root path) All congress persons
+
+
+In order to format the `$.getJSON` request properly, will need to reference how to **filter by fields**  on the sunlight foundation api:
+https://sunlightlabs.github.io/congress/legislators.html
+
+The request url for retrieving legislator info from the api is:
 ```
-git clone git@github.com:t3tools/webpack-es6-and-scss.git «your-projet»
-```
-
-##### 2. Install the packages
-```
-npm install
-```
-
-##### 3. Run the taskrunner & run the local server
-- Task Runner
-```
-npm run go
-```
-
-- Server
-```
-npm start
-```
-
-##### 4. Workflow
-Do scss and javascript work in the `src/` directory. It will compile to the `dist/` with the taskrunner.
-
-`index.html` pages are served out of the `dist/`
-
-##Webpack Configuration:
-```
-const webpack = require('webpack')
-const nodeEnv = process.env.NODE_ENV || 'production'
-
-module.exports = {
-  devtool : 'source-map',
-  entry:   { filename: './src/index.js' },
-  output : { filename: './dist/js/app.js' },
-  module: {
-    loaders: [	    
-	 ]
-  },
-  plugins: [
-     //uglify js
-     new webpack.optimize.UglifyJsPlugin({
-			compress: { warnings: false }, 
-			output: {comments: false},
-         sourceMap: true
-	  }),
-	
-     //env plugin
-	  new webpack.DefinePlugin({
-        'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
-	  }),
-  ]
-}
-
+https://congress.api.sunlightfoundation.com/legislators?callack=?
 ```
 
-
-#Configure #ES6
-#### In `package.json`
-- babel-core
-- babel-loader
-- babel-preset-es2015
-
-#### ES6: In `webpack.config.js`
+It should fetch and render the following UI for each congress person:
 ```
-	...
-   loaders: [
-		{
-			test: /\.js$/,
-			exclude: /node_modules/,
-			loader: 'babel-loader',
-			query: {
-				presets: ['es2015']
-			}
-		},
-   ...
-```
-
-
-### Configure Scss
-#### (in `package.json`
-```
-    "css-loader": "^0.26.1",
-    "sass-loader": "^5.0.1",
-    "style-loader": "^0.13.1",
-    "node-sass": "^4.5.0",
-    "extract-text-webpack-plugin": "^2.0.0-beta.5",
-```
-
-#### (2) in `webpack.config.js`
-```
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-modules: {
-  loaders: [
-	  ...
-     {
-		  test: /\.scss$/,
-		  loader: ExtractTextPlugin.extract({fallbackLoader: "style-loader", loader: "css-loader!sass-loader"})		 
-	  },
-	]
-  },
-
-  plugins: {
-	 ...
-    new ExtractTextPlugin({filename: './dist/styles.css', allChunks: true})
-  }
-
-}
-  
+<div class="profile-card">
+	<img src="https://flathash.com/«bioguide_id»">
+	<h5>
+		«first name»</br>
+		<small>«state»</small>
+	</h5>
+</div>
 ```
